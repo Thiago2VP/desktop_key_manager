@@ -1,4 +1,5 @@
 import connection
+from crypt import new_crpt
 import sys
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import (
@@ -67,6 +68,8 @@ class MainWindow(QMainWindow):
         self.keyPass = QLineEdit()
         descriptionLabel = QLabel("Description:")
         self.description = QLineEdit()
+        passphraseLabel = QLabel("Passphrase:")
+        self.passphrase = QLineEdit()
         resultLabel = QLabel("Resultado:")
         self.result = QLineEdit()
 
@@ -75,6 +78,7 @@ class MainWindow(QMainWindow):
         self.login.setStyleSheet('QLineEdit {background-color: #181926; color: #b7bdf8;}')
         self.keyPass.setStyleSheet('QLineEdit {background-color: #181926; color: #b7bdf8;}')
         self.description.setStyleSheet('QLineEdit {background-color: #181926; color: #b7bdf8;}')
+        self.passphrase.setStyleSheet('QLineEdit {background-color: #181926; color: #b7bdf8;}')
         self.result.setStyleSheet('QLineEdit {background-color: #181926; color: #a6da95;}')
 
         layout2.addWidget(wordIdLabel, 0, 0)
@@ -87,8 +91,10 @@ class MainWindow(QMainWindow):
         layout2.addWidget(self.keyPass, 3, 1)
         layout2.addWidget(descriptionLabel, 4, 0)
         layout2.addWidget(self.description, 4, 1)
-        layout2.addWidget(resultLabel, 5, 0)
-        layout2.addWidget(self.result, 5, 1)
+        layout2.addWidget(passphraseLabel, 5, 0)
+        layout2.addWidget(self.passphrase, 5, 1)
+        layout2.addWidget(resultLabel, 6, 0)
+        layout2.addWidget(self.result, 6, 1)
 
         layout = QGridLayout()
         layout.addLayout(layout1, 0, 0)
@@ -117,8 +123,19 @@ class MainWindow(QMainWindow):
                 self.login.setText(i[2])
                 self.keyPass.setText(i[3])
                 self.description.setText(i[4])
-
-        self.result.setText("Busca Realizada")
+        
+        text = self.keyPass.text()
+        crypt_key = self.passphrase.text()
+        try:
+            dec_text = new_crpt.decrypt(text, crypt_key)
+            self.keyPass.setText(dec_text)
+            self.result.setText("Busca Realizada")
+        except:
+            dec_text = "Não decriptografado"
+            self.login.setText("Não autorizado")
+            self.keyPass.setText("Não autorizado")
+            self.description.setText("Não autorizado")
+            self.result.setText("Passphrase errada")
 
     def update_data(self):
         words = connection.slectData()
@@ -139,9 +156,14 @@ class MainWindow(QMainWindow):
         self.result.setText(str(resp))
 
     def insert_data(self):
-        resp = connection.insertData(self.name.text(), self.login.text(), self.keyPass.text(), self.description.text())
-
-        self.result.setText(str(resp))
+        text = self.keyPass.text()
+        crypt_key = self.passphrase.text()
+        resp = ""
+        try:
+            resp = enc_text = new_crpt.encrypt(text, crypt_key)
+            resp = connection.insertData(self.name.text(), self.login.text(), enc_text, self.description.text())
+        finally:
+            self.result.setText(str(resp))
 
 
 app = QApplication(sys.argv)
