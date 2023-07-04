@@ -47,8 +47,7 @@ def insertData(name="", login="", keyPass="", description=""):
         cur.execute(f"INSERT INTO words (id, wordName, login, keyPass, wordDescription) VALUES ({dt_string}, '{name}', '{login}', '{keyPass}', '{description}')")
         conn.commit()
     except mariadb.Error as e:
-        print(f"Error connecting to MariaDB Platform: {e}")
-        sys.exit(1)
+        return f"Error connecting to MariaDB Platform: {e}"
     return "Sucesso"
 
 def updateData(wordId=0, name="", login="", keyPass="", description=""):
@@ -56,8 +55,7 @@ def updateData(wordId=0, name="", login="", keyPass="", description=""):
         cur.execute(f"UPDATE words SET wordName = '{name}', login = '{login}', keyPass = '{keyPass}', wordDescription = '{description}' WHERE id = {wordId}")
         conn.commit()
     except mariadb.Error as e:
-        print(f"Error connecting to MariaDB Platform: {e}")
-        sys.exit(1)
+        return f"Error connecting to MariaDB Platform: {e}"
     return "Sucesso"
 
 def deleteData(wordId=0):
@@ -65,8 +63,7 @@ def deleteData(wordId=0):
         cur.execute(f"DELETE FROM words WHERE id = {wordId}")
         conn.commit()
     except mariadb.Error as e:
-        print(f"Error connecting to MariaDB Platform: {e}")
-        sys.exit(1)
+        return f"Error connecting to MariaDB Platform: {e}"
     return "Sucesso"
 
 def selectOneData(name=""):
@@ -76,12 +73,5 @@ def selectOneData(name=""):
         for (word) in cur:
             words.append([word[0], word[1], word[2], word[3], word[4]])
     except mariadb.Error as e:
-        print(f"Error connecting to MariaDB Platform: {e}")
-        sys.exit(1)
+        return f"Error connecting to MariaDB Platform: {e}"
     return words
-
-# insertData("instagram", "thiago@mail.com", "asd1548sa", "Empty")
-# updateData(213009967, "instagram", "thiago@mail.com", "asd1548sa", "Agora possui")
-# deleteData(213009967)
-# specific = selectOneData("facebook")
-# words = slectData()
