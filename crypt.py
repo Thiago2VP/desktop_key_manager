@@ -3,7 +3,7 @@ from base64 import b64encode, b64decode
 
 class Crypt:
 
-    def __init__(self, salt='SlTKeYOpHygTYkP3'):
+    def __init__(self, salt='******************'):
         self.salt = salt.encode('utf8')
         self.enc_dec_method = 'utf-8'
 
