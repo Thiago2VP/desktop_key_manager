@@ -140,11 +140,15 @@ class MainWindow(QMainWindow):
     def update_data(self):
         words = connection.slectData()
         resp = ""
-        for i in words:
-            if (i[0] == int(self.wordId.text())):
-                resp = connection.updateData(int(self.wordId.text()), self.name.text(), self.login.text(), self.keyPass.text(), self.description.text())
-
-        self.result.setText(str(resp))
+        text = self.keyPass.text()
+        crypt_key = self.passphrase.text()
+        try:
+            resp = enc_text = new_crpt.encrypt(text, crypt_key)
+            for i in words:
+                if (i[0] == int(self.wordId.text())):
+                    resp = connection.updateData(int(self.wordId.text()), self.name.text(), self.login.text(), enc_text, self.description.text())
+        finally:
+            self.result.setText(str(resp))
 
     def delete_data(self):
         words = connection.slectData()
