@@ -60,13 +60,13 @@ class MainWindow(QMainWindow):
 
         wordIdLabel = QLabel("Id:")
         self.wordId = QLineEdit()
-        nameLabel = QLabel("Name:")
+        nameLabel = QLabel("Nome:")
         self.name = QLineEdit()
         loginLabel = QLabel("Login:")
         self.login = QLineEdit()
-        keyPassLabel = QLabel("KeyPass:")
+        keyPassLabel = QLabel("Senha:")
         self.keyPass = QLineEdit()
-        descriptionLabel = QLabel("Description:")
+        descriptionLabel = QLabel("Desrição:")
         self.description = QLineEdit()
         passphraseLabel = QLabel("Passphrase:")
         self.passphrase = QLineEdit()
@@ -116,6 +116,10 @@ class MainWindow(QMainWindow):
 
     def search_data(self):
         words = connection.slectData()
+        self.wordId.setText("")
+        self.login.setText("")
+        self.keyPass.setText("")
+        self.description.setText("")
         for i in words:
             if (i[1] == self.name.text()):
                 self.wordId.setText(str(i[0]))
@@ -124,19 +128,22 @@ class MainWindow(QMainWindow):
                 self.keyPass.setText(i[3])
                 self.description.setText(i[4])
         
-        text = self.keyPass.text()
-        crypt_key = self.passphrase.text()
-        try:
-            dec_text = new_crpt.decrypt(text, crypt_key)
-            self.keyPass.setText(dec_text)
-            self.result.setText("Busca Realizada")
-        except:
-            dec_text = "Não decriptografado"
-            self.wordId.setText("Não autorizado")
-            self.login.setText("Não autorizado")
-            self.keyPass.setText("Não autorizado")
-            self.description.setText("Não autorizado")
-            self.result.setText("Passphrase errada")
+        if (self.login.text() == ""):
+            self.result.setText("Informação não encontrada")
+        else:
+            text = self.keyPass.text()
+            crypt_key = self.passphrase.text()
+            try:
+                dec_text = new_crpt.decrypt(text, crypt_key)
+                self.keyPass.setText(dec_text)
+                self.result.setText("Busca Realizada")
+            except:
+                dec_text = "Não decriptografado"
+                self.wordId.setText("Não autorizado")
+                self.login.setText("Não autorizado")
+                self.keyPass.setText("Não autorizado")
+                self.description.setText("Não autorizado")
+                self.result.setText("Passphrase errada")
 
     def update_data(self):
         words = connection.slectData()
