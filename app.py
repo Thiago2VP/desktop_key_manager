@@ -132,6 +132,7 @@ class MainWindow(QMainWindow):
             self.result.setText("Busca Realizada")
         except:
             dec_text = "Não decriptografado"
+            self.wordId.setText("Não autorizado")
             self.login.setText("Não autorizado")
             self.keyPass.setText("Não autorizado")
             self.description.setText("Não autorizado")
